@@ -7,13 +7,13 @@ Initially coded on a flight with no wifi, please excuse any slop
 ## Setup
 
 ```
-conda create -n plm_sandbox python pip numpy biopython matplotlib scipy seaborn
+conda create -n plm_sandbox python pip
 conda activate plm_sandbox
-pip install torch
+pip install uv
+uv sync
+pre-commit install
 ```
 
 ## Basic MLM on a single Pfam
 
-```
-python src/01_mlm_pfama.py
-```
+`notebooks/01_mlm_pfama.ipynb`

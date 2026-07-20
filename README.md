@@ -4,7 +4,7 @@ Building some protein language model and folding/structural toy examples from sc
 
 This started as a project on a flight with no wifi, please excuse any human-derived slop
 
-All of these projects have been completed without code generation via AI coding tools, the old fashioned way to support learning/skill development.
+All of these projects have been completed without code generation via AI coding tools, the old fashioned way to make sure I remember how things work, or learn new parts that I would miss if I didn't write every line.
 
 
 ## Setup

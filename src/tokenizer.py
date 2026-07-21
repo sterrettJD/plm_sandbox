@@ -1,7 +1,30 @@
 import numpy as np
 
-
-KEYS = ["A", "R", "N", "D", "C", "Q", "E", "G", "H", "I", "L", "K", "M", "F", "P", "S", "T", "W", "Y", "<PAD>", "<MASK>", "<BOS>", "<UNK>"]
+KEYS = [
+    "A",
+    "R",
+    "N",
+    "D",
+    "C",
+    "Q",
+    "E",
+    "G",
+    "H",
+    "I",
+    "L",
+    "K",
+    "M",
+    "F",
+    "P",
+    "S",
+    "T",
+    "W",
+    "Y",
+    "<PAD>",
+    "<MASK>",
+    "<BOS>",
+    "<UNK>",
+]
 IDS = list(range(len(KEYS)))
 VOCAB = {key: id for key, id in zip(KEYS, IDS)}
 REV_VOCAB = {id: key for key, id in zip(KEYS, IDS)}
@@ -19,10 +42,11 @@ def tokenize(sequence: str) -> np.ndarray:
         sequence (str): The raw protein sequence (e.g., "MVLSPADKTNV").
 
     Returns:
-        list[int]: A list of token IDs corresponding to each character in the input sequence.
+        list[int]: A list of token IDs corresponding to each character in
+        the input sequence.
     """
     token_ids = [VOCAB.get(char, VOCAB["<UNK>"]) for char in sequence]
-    
+
     return np.array(token_ids)
 
 
@@ -36,10 +60,7 @@ def de_tokenize(token_ids: np.ndarray) -> str:
     Returns:
         str: The original protein sequence string, reconstructed from the token IDs.
     """
-    
-    # We'll map each token ID back to its corresponding character in our vocabulary dictionary.
-    
-    decoded = [REV_VOCAB.get(id) for id in token_ids]
-    
-    return "".join(decoded)
 
+    decoded = [REV_VOCAB.get(id) for id in token_ids]
+
+    return "".join(decoded)

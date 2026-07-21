@@ -1,22 +1,24 @@
+from __future__ import annotations
+
 import numpy as np
 
 
 class PDBData:
     def __init__(
         self,
-        name,
-        description=None,
-        record_type=None,
-        element=None,
-        coordinates=None,
-        residue_name=None,
-        residue_number=None,
-        chain=None,
+        name: str,
+        description: str | None = None,
+        record_type: list[str] | None = None,
+        element: list[str] | None = None,
+        coordinates: list[tuple[float | int]] | None = None,
+        residue_name: list[str] | None = None,
+        residue_number: list[int | float] | None = None,
+        chain: list[str] | None = None,
     ):
         self.name = name
         self.description = description
         self.record_type = record_type
-        self.elements = element
+        self.element = element
         self.coordinates = coordinates
         self.residue_name = residue_name
         self.residue_number = residue_number
@@ -24,8 +26,46 @@ class PDBData:
 
     def head(self, n: int = 5) -> None:
         print(f"PDB Data for {self.name}")
+        print(f"{sum(r == 'ATOM' for r in self.record_type)} ATOM")
+        print(f"{sum(r == 'HETATM' for r in self.record_type)} HETATM")
+
         for i in range(n):
-            print(f"{self.record_type[i]} {self.elements[i]}: {self.coordinates[i]}")
+            print(f"{self.record_type[i]} {self.element[i]}: {self.coordinates[i]}")
+
+    def filter_record_type(self, type: str) -> PDBData:
+        """
+        Filters the object to only entries that are of record type `type`
+        Args:
+            type (str): the record_type to include. ATOM or HETATM
+
+        Returns: PDBData object
+        """
+        accepted = {"ATOM", "HETATM"}
+        if type not in accepted:
+            raise ValueError(f"Please pass a supported type ({accepted})")
+
+        indexes = [record == type for record in self.record_type]
+
+        return PDBData(
+            f"{self.name} ({type} filtered)",
+            record_type=[c for c, m in zip(self.record_type, indexes) if m],
+            element=[c for c, m in zip(self.element, indexes) if m],
+            residue_name=[c for c, m in zip(self.residue_name, indexes) if m],
+            residue_number=[c for c, m in zip(self.residue_number, indexes) if m],
+            coordinates=[c for c, m in zip(self.coordinates, indexes) if m],
+            chain=[c for c, m in zip(self.chain, indexes) if m],
+        )
+
+    def filter_by_indexes(self, indexes: list) -> PDBData:
+        return PDBData(
+            f"{self.name} (index filtered)",
+            record_type=[self.record_type[i] for i in indexes],
+            element=[self.element[i] for i in indexes],
+            residue_name=[self.residue_name[i] for i in indexes],
+            residue_number=[self.residue_number[i] for i in indexes],
+            coordinates=[self.coordinates[i] for i in indexes],
+            chain=[self.chain[i] for i in indexes],
+        )
 
     def numpy_coords(self, only_atom: bool = True) -> np.ndarray:
         if only_atom:
@@ -102,6 +142,9 @@ def main():
 
     print("Coords Array:")
     print(parsed.numpy_coords()[0:5])
+
+    filtered = parsed.filter_record_type("ATOM")
+    filtered.head()
 
 
 if __name__ == "__main__":
